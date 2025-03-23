@@ -9,6 +9,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 
 	configapi "github.com/ray-project/kuberay/ray-operator/apis/config/v1alpha1"
+	"github.com/ray-project/kuberay/ray-operator/controllers/ray/batchscheduler/scheduler_plugins"
 	"github.com/ray-project/kuberay/ray-operator/controllers/ray/batchscheduler/volcano"
 	"github.com/ray-project/kuberay/ray-operator/controllers/ray/batchscheduler/yunikorn"
 
@@ -60,6 +61,8 @@ func getSchedulerFactory(rayConfigs configapi.Configuration) (schedulerinterface
 			factory = &volcano.VolcanoBatchSchedulerFactory{}
 		case yunikorn.GetPluginName():
 			factory = &yunikorn.YuniKornSchedulerFactory{}
+		case scheduler_plugins.GetPluginName():
+			factory = &scheduler_plugins.SchedulerPluginsSchedulerFactory{}
 		default:
 			return nil, fmt.Errorf("the scheduler is not supported, name=%s", rayConfigs.BatchScheduler)
 		}
